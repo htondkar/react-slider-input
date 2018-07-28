@@ -17,15 +17,26 @@
 }
 
 .slider__dragger {
-  height: 15px;
-  width: 15px;
+  height: 20px;
+  width: 20px;
+  top: -2.5px;
   border-radius: 50%;
   background-color: darkslategray;
-  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.7);
   position: absolute;
   cursor: ew-resize;
 }
 
 .slider__dragger:hover {
   box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.5);
+}
+
+.slider__indicator {
+  background-color: rgba(0, 238, 255, 0.877);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 7.5px;
+  box-shadow: 0 0 15px 1px rgba(0, 238, 255, 0.3);
 }

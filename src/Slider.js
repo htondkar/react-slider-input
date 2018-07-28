@@ -5,6 +5,7 @@ import { debouce, setCursorGlobal } from './util'
 export default class Slider extends React.Component {
   dragger = React.createRef()
   track = React.createRef()
+  indicator = React.createRef()
 
   newPosition = 0
   oldPosition = 0
@@ -18,6 +19,12 @@ export default class Slider extends React.Component {
 
   componentDidMount() {
     this.setMinMaxValue()
+
+    const initialValue = (this.max + this.min) / 2
+    this.setElementLeft(initialValue, this.dragger.current)
+    this.syncIndicator(initialValue)
+    this.updateValueInState(initialValue / this.max)
+
     window.addEventListener('resize', this.onWidowResize)
   }
 
@@ -38,6 +45,7 @@ export default class Slider extends React.Component {
 
   onDrag = event => {
     event.preventDefault()
+
     const dragger = this.dragger.current
     const newPosition = event.clientX
 
@@ -49,7 +57,14 @@ export default class Slider extends React.Component {
     if (left > this.max || left < this.min) return
 
     this.setElementLeft(left, dragger)
-    this.calculateValue()
+    this.syncIndicator(left)
+
+    const percentage = this.calculateValue()
+    this.updateValueInState(percentage)
+  }
+
+  syncIndicator = draggerPositionPX => {
+    this.indicator.current.style.right = `${this.max - draggerPositionPX}px`
   }
 
   setElementLeft = (left, element) => (element.style.left = `${left}px`)
@@ -69,13 +84,16 @@ export default class Slider extends React.Component {
 
   getDraggerLeftValue = () => parseFloat(this.dragger.current.style.left)
 
-  calculateValue = debouce(100, () => {
+  calculateValue = () => {
     const percentage = this.getDraggerLeftValue() / this.max
+    return percentage
+  }
 
+  updateValueInState = debouce(100, percentage =>
     this.setState({
       value: percentage.toFixed(2)
     })
-  })
+  )
 
   onWidowResize = () => {
     this.setMinMaxValue()
@@ -87,6 +105,8 @@ export default class Slider extends React.Component {
     return (
       <div className="slider">
         <div className="slider__track" ref={this.track}>
+          <div className="slider__indicator" ref={this.indicator} />
+
           <div
             className="slider__dragger"
             ref={this.dragger}
