@@ -45,7 +45,6 @@ export default class Slider extends React.Component {
 
   onDrag = event => {
     event.preventDefault()
-
     const dragger = this.dragger.current
     const newPosition = event.clientX
 
